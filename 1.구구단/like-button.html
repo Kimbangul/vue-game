@@ -9,6 +9,8 @@
 </head>
 <body>
     <div id="root">
+        <div v-if="route === 'main">메인화면</div>
+        <div v-else-if="route === 'sub'"">서브화면</div>
         <div v-if="liked">좋아요 눌렀음</div>
         <button v-else v-on:click="onClickButton()">Like</button>
         <!-- if와 else, else-if는 형제 태그면서 "인접" 해야 합니다. -->
@@ -18,7 +20,8 @@
     const app = new Vue({
         el: '#root',
         data: {
-            liked: false
+            liked: false,
+            route : 'main'
         },
         methods: {
             onClickButton: function(){

@@ -21,40 +21,42 @@
         </form>
         <div id="result">{{result}}</div>
     </div>
-</body>
-<script>
-    const app = new Vue({
-        el: '#root',
-        data: {
-            first: Math.ceil(Math.random() * 9),
-            second: Math.ceil(Math.random() * 9), // 두 번째 숫자
-            value: '', // 사용자가 치는 결괏값
-            result: '' // 정답 / 오답 표시
-        },
-        methods: {
-            onSubmitForm: function (e) {
-                // 이벤트 리스너와 동일
-                e.preventDefault();
-                // 뷰나 리액트 같은 싱글 페이지에서는 페이지 새로고침을 막아주어야 함.
-                if (this.first * this.second === parseInt(this.value)) {
-                    this.result = '정답';
-                    // 여기서의 this는 데이터를 가리킨다.
-
-                    // 문제 ,사용자 입력값 초기화
-                    this.first = Math.ceil(Math.random() * 9);
-                    this.second = Math.ceil(Math.random() * 9); 
-                    this.value = ''; 
-                } else {
-                    this.result = '땡'
-
-                    //  사용자 입력값 초기화
-                    this.value = ''; 
+    <script>
+        // Vue 인 스 턴 스 
+        const app = new Vue({
+            el: '#root',
+            data: {
+                first: Math.ceil(Math.random() * 9),
+                second: Math.ceil(Math.random() * 9), // 두 번째 숫자
+                value: '', // 사용자가 치는 결괏값
+                result: '' // 정답 / 오답 표시
+            },
+            methods: {
+                onSubmitForm: function (e) {
+                    // 이벤트 리스너와 동일
+                    e.preventDefault();
+                    // 뷰나 리액트 같은 싱글 페이지에서는 페이지 새로고침을 막아주어야 함.
+                    if (this.first * this.second === parseInt(this.value)) {
+                        this.result = '정답';
+                        // 여기서의 this는 데이터를 가리킨다.
+    
+                        // 문제 ,사용자 입력값 초기화
+                        this.first = Math.ceil(Math.random() * 9);
+                        this.second = Math.ceil(Math.random() * 9); 
+                        this.value = ''; 
+                    } else {
+                        this.result = '땡'
+    
+                        //  사용자 입력값 초기화
+                        this.value = ''; 
+                    }
+                    this.$refs.answer.focus()
+                    // document.querySelector나 jQuery에서의 태그 선택자와 동일하게 vue는 $refs를 사용해서 태그를 선택한다.
                 }
-                this.$refs.answer.focus()
-                // document.querySelector나 jQuery에서의 태그 선택자와 동일하게 vue는 $refs를 사용해서 태그를 선택한다.
             }
-        }
-    })
-</script>
+        })
+    </script>
+</body>
+
 
 </html>
