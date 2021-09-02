@@ -18,13 +18,21 @@ module.exports = {
     },
     module: {
         // webpack 의 핵심
-        rules: [{
+        rules: [
+            {
             // 파일들을 합칠 때 어떻게 합쳐야 할지.
             test: /\.vue$/,
-            loader: 'vue-loader',
-            //  파일명이 .vue로 끝나는 파일의 정규표현식.
-            // use: 로 표현해도 같음.
-        }],
+            use: 'vue-loader',
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader',
+                    // sass, less, postcss 등을 사용할 것이면 sass-loader 등을 추가.
+                ]
+            }
+        ],
     },
     plugins: [new VueLoaderPlugin()],
     output: {
