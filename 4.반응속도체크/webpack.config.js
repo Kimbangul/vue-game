@@ -34,10 +34,25 @@ module.exports = {
             }
         ],
     },
-    plugins: [new VueLoaderPlugin()],
+    devServer: {
+        // historyApiFallback: true,
+        // static: { 
+        //     directory: path.join(__dirname, 'dist') , 
+        // },
+        // devMiddleware: { publicPath: '/dist' },
+        // hot: true,
+        // port: 8080,
+        // compress: true,
+        devMiddleware: { publicPath: '/dist' },
+        static: { directory: path.resolve(__dirname) },
+        hot: true
+    },
+    plugins: [new VueLoaderPlugin()
+    ],
     output: {
         filename: '[name].js', // 최종 결과물
-        path: path.join(__dirname, 'dist')
+        path: path.join(__dirname, 'dist'),
+        publicPath: './dist'
         // __dirname : 현재 경로
     },
 };

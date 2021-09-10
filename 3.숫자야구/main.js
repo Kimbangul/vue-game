@@ -4,6 +4,8 @@ import Vue from 'vue';
 import NumberBaseball from './NumberBaseball.vue'
 //  import로 NumberBaseball 연결
 
+   
+Vue.config.devtools = false;
 new Vue(NumberBaseball).$mount( '#root' );
 //  el 과 같은 역할. vue가 통제할 태그
 // vue 컴포넌트를 인스턴스에 연결해 주어야 한다.
