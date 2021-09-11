@@ -23,6 +23,7 @@ const rspPosition = {
             '가위':  '-142px',
             '보': '-284px'
         };
+let interval = null;
 
     export default {
 
@@ -44,11 +45,38 @@ const rspPosition = {
         methods: {
             onClickBtn: function(userSelect){
                 console.log(this.imgPosition);
+                clearInterval();
                 if (userSelect === '바위'){
-                    console.log(rspPosition.바위);
+                    
+                }
+                else if (userSelect === '가위'){
+
+                }
+                else if (userSelect === '보'){
+
                 }
             }
         },
+        mounted(){
+            interval = setInterval(() => {
+                // 후에 clearInterval 로 멈춰주기 위해 번수로 저장.
+                if (this.imgPosition ===  rspPosition.바위){
+                    this.imgPosition = rspPosition.가위;
+                } 
+                else if (this.imgPosition === rspPosition.가위){
+                    this.imgPosition = rspPosition.보;
+                }
+                else if(this.imgPosition === repPosition.보){ 
+                    this.imgPosition = rspPosition.바위;
+                }
+            }, 100)
+            // 0.1초마다 가위바위보 그림 바꾸기
+        },
+        beforeDestroyed(){
+            clearInterval(interval);
+            // setInterval은 화면에서 컴포넌트가 사라져도 계속 실행이 된다. 이는 메모리 누수를 유발함.
+            // 이를 방지하기 위해 beforeDsetory에서 clearInterval() 에서 최종 정리를 해 준다.
+        }
 
     }; 
 </script>
