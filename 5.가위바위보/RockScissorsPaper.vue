@@ -23,6 +23,20 @@ const rspPosition = {
             '가위':  '-142px',
             '보': '-284px'
         };
+        // 가위바위보 표
+
+const scores = {
+    가위 : 1,
+    바위: 0,
+    보: -1,
+};
+
+const computerChoices = (imgPosition) => {
+    return Object.entries(rspPosition).find(function(v){
+        return v[1] === imgPosition;
+    })[0];
+}
+
 let interval = null;
 
     export default {
@@ -43,22 +57,8 @@ let interval = null;
             }
         },
         methods: {
-            onClickBtn: function(userSelect){
-                console.log(this.imgPosition);
-                clearInterval();
-                if (userSelect === '바위'){
-                    
-                }
-                else if (userSelect === '가위'){
-
-                }
-                else if (userSelect === '보'){
-
-                }
-            }
-        },
-        mounted(){
-            interval = setInterval(() => {
+            changeHand: function(){
+                interval = setInterval(() => {
                 // 후에 clearInterval 로 멈춰주기 위해 번수로 저장.
                 if (this.imgPosition ===  rspPosition.바위){
                     this.imgPosition = rspPosition.가위;
@@ -66,18 +66,42 @@ let interval = null;
                 else if (this.imgPosition === rspPosition.가위){
                     this.imgPosition = rspPosition.보;
                 }
-                else if(this.imgPosition === repPosition.보){ 
+                else if(this.imgPosition === rspPosition.보){ 
                     this.imgPosition = rspPosition.바위;
                 }
             }, 100)
             // 0.1초마다 가위바위보 그림 바꾸기
+            }, // 중복을 제거하기 위해 메서드를 사용하기도 함.
+            onClickBtn: function(userSelect){
+                    clearInterval(interval);
+                    // 잠시 컴퓨터의 손이 움직이는 것을 멈춰줌.
+                    const myScore = scores[userSelect];
+                    const cpuScore = scores[computerChoices(this.imgPosition)];
+                    const diff = myScore - cpuScore;
+                
+                    if (diff === 0){
+                        this.result = '비겼습니다!';
+                    } else if ([-1, 2].includes(diff) ){
+                        this.result = '이겼습니다!';
+                        this.score += 1;
+                    } else{
+                        this.result = '졌습니다.';
+                        if(this.score > 0){
+                            this.score -= 1;
+                        }
+                    }
+
+                    setTimeout(this.changeHand, 1000);
+                }
+            },
+        mounted(){
+            this.changeHand()
         },
         beforeDestroyed(){
             clearInterval(interval);
             // setInterval은 화면에서 컴포넌트가 사라져도 계속 실행이 된다. 이는 메모리 누수를 유발함.
             // 이를 방지하기 위해 beforeDsetory에서 clearInterval() 에서 최종 정리를 해 준다.
         }
-
     }; 
 </script>
 <style scoped>
