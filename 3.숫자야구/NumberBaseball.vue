@@ -13,7 +13,7 @@
         <div>시도: {{tries.length}}</div>
         <!-- 배열의 갯수 표시 -->
 
-            <li v-for="t in tries">
+            <li v-for="t in tries" v-bind:key="t.try">
                 <!-- try는 예약어라서 쓸 수 없음. -->
                 <div>{{t.try}}</div>
                 <div>{{t.result}}</div>
