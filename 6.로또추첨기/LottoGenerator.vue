@@ -66,7 +66,7 @@
                 this.winBalls = [];
                 this.bonus = null;
                 this.redo = false;
-                this.showBalls();
+                // this.showBalls();
             }
         },
         mounted(){
@@ -79,7 +79,14 @@
             });
         },
         watch: {
-
+            winBalls(val, oldVal){
+                // val: 값, oldVal: 이전 값
+                // 감시하기 원하는 데이터를 적어 준다
+                if (val.length === 0){
+                    // winBalls가 빈 배열이 되었을 때
+                    this.showBalls();
+                }
+            }
         }
 
     }
