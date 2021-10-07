@@ -1,6 +1,6 @@
 <template>
 <table>
-        <tr-component v-for="( rowData , index ) in tableData" v-bind:row-data="rowData" v-bind:row-index="index">
+        <tr-component v-for="( rowData , index ) in tableData"  v-bind:key="index" v-bind:row-data="rowData" v-bind:row-index="index">
     </tr-component>
 </table>
 </template>
@@ -29,6 +29,6 @@ export default{
 }
 
 </script>
-<style scoped>
+<style>
 
 </style>
