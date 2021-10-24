@@ -15,6 +15,7 @@
 <script>
     // import Vue from 'vue';
     import TableComponent from './TableComponent.vue';
+    import EventBus from './EventBus.js';
 
     export default{
         components: {
@@ -39,8 +40,63 @@
             onChangeData(){
                 // this.tableData[1][0] = 'X'; << 작동하지 않는다.
                 this.$set(this.tableData[1], 0, 'X'); // 바꾸고 싶은 값, 키.1,0 에 X를 넣는다. Vue.set과 동일
+            },
+            onClickTd(rowIndex, cellIndex){
+                
+                this.$set(this.tableData[rowIndex], cellIndex, this.turn);
+                //매개변수로 바뀌었으므로 this.rowIndex에서 rowIndex로 변경.
+
+                // 빙고가 생겼는지 확인하는 코 드 
+                let win = false;
+                if (this.tableData[rowIndex][0] === this.turn && this.tableData[rowIndex][1] === this.turn && this.tableData[rowIndex][2]){
+                    win = true;
+                }
+                if (this.tableData[0][cellIndex] === this.turn && this.tableData[1][cellIndex] === this.turn && this.tableData[2][cellIndex] === this.turn){
+                    win = true;
+                }
+                if (this.tableData[0][0] ===  this.turn && this.tableData[1][1] === this.turn && this.tableData[2][2] === this.turn){
+                    win = true;
+                }
+                if (this.tableData[0][2] ===  this.turn && this.tableData[1][1] === this.turn && this.tableData[2][0] === this.turn){
+                    win = true;
+                }
+                if (win){
+                    // 이긴 경우 : 초기화
+                    this.winner = this.turn;
+                    this.turn = 'O';
+                    this.tableData = [['','',''],['','',''],['','','']];
+                } else{
+                    let all = true; //  all이 true 면 무승부 라는 뜻
+                    this.tableData.forEach((row) => { // 모든 칸이 다 차 있는지 검사하기!
+                        // 무승부 검사
+                        row.forEach((cell)=>{
+                            if (!cell){
+                                all = false;
+                            }
+                        });
+                    });
+                    if (all){
+                        // 무승부인 경우
+                        this.winner = ''; // 승자는 없다.
+                        this.turn = 'O';
+                        this.tableData = [['','',''],['','',''],['','','']];
+                    } 
+                    else{
+                        // 게임이 안 끝났을 때는 턴을 다음 사람 턴으로
+                        this.turn = this.turn === 'O' ?  'X' : 'O';  // 현재 턴이 O면 O를 넣고, 현재 턴이 X면 그 칸에 X를 넣는다.
+                // 인덱스를 여러 개 쓰는 경우, 마지막 인덱스를 key로 하면 된다.
+                    }
+                }
             }
-        }
+        },
+        created(){
+            EventBus.$on('clickTd', this.onClickTd);
+            // 사용자 정의 이벤트를 등록해줄 수 있음.
+            // clickTd 이벤트가 발생하면, onClickTd를 실행시키도록 예약
+
+            //EventBus.$on('clickTr', this.onClickTr);
+            // EventBus.$on('clickTable, this.onClickTable);
+        },
     }
 </script>
 <style>
