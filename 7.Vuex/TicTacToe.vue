@@ -13,11 +13,12 @@
 
 </template>
 <script>
-    // import Vue from 'vue';
+    import store from './store.js'; // store와 최상위 컴포넌트를 연결
     import TableComponent from './TableComponent.vue';
     import EventBus from './EventBus.js';
 
     export default{
+        store,
         components: {
             TableComponent,
         },

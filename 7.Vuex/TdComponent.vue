@@ -6,9 +6,25 @@
 
     export default{
         props: {
-            cellData: String, // O,X가 CellData가 될 것
             rowIndex: Number,
             cellIndex: Number
+        },
+        computed:{
+            cellData(){
+                return this.$store.state.tableData[this.rowIndex][this.cellIndex];
+                // 부모 컴포넌트로부터 데이터를 물려받지 않고, 바로 접근 가능.
+            },
+            // computed를 통해 Vuex state를 가져올 수 있다.
+            // Vuex의 state를 쓰기 위해서는 반드시 computed에 연결해 주어야 한다.
+            tableData(){
+                return this.$store.state.tableData;
+            },
+            turn(){
+                return this.$store.state.turn;
+            }
+            // Vuex의 state는 computed를 통해 가져온다.
+            // mutations는 $store.commit() 을 통해 실행한다.
+            // 이렇게 하면 데이터는 Vuex에 있고, 컴포넌트는 Vuex에서 데이터를 가져와 화면을 그리고, mutations으로 데이터를 수정한다.
         },
         data(){
             return{
@@ -23,18 +39,19 @@
             // this.$store.commit('CLICK_CELL');
             this.$store.commit(CLICK_CELL, {row: this.rowIndex, cell : this.cellIndex});
             //mutation 을 부를 때는 commit 을 사용하여 불러온다.  mutition 이름이 CLICK_CELL 인 것을 실행한다.
-
+  console.log(this.tableData[this.rowIndex][this.cellIndex]); 
            let win = false;
-                if (rootData.tableData[this.rowIndex][0] === rootData.turn && rootData.tableData[this.rowIndex][1] === rootData.turn && rootData.tableData[this.rowIndex][2]){
+         
+                if (this.tableData[this.rowIndex][0] ===this.turn && this.tableData[this.rowIndex][1] ===this.turn && this.tableData[this.rowIndex][2]){
                     win = true;
                 }
-                if (rootData.tableData[0][this.cellIndex] === rootData.turn && rootData.tableData[1][this.cellIndex] === rootData.turn && rootData.tableData[2][this.cellIndex] === rootData.turn){
+                if (this.tableData[0][this.cellIndex] ===this.turn && this.tableData[1][this.cellIndex] ===this.turn && this.tableData[2][this.cellIndex] ===this.turn){
                     win = true;
                 }
-                if (rootData.tableData[0][0] ===  rootData.turn && rootData.tableData[1][1] === rootData.turn && rootData.tableData[2][2] === rootData.turn){
+                if (this.tableData[0][0] === this.turn && this.tableData[1][1] ===this.turn && this.tableData[2][2] ===this.turn){
                     win = true;
                 }
-                if (rootData.tableData[0][2] ===  rootData.turn && rootData.tableData[1][1] === rootData.turn && rootData.tableData[2][0] === rootData.turn){
+                if (this.tableData[0][2] === this.turn && this.tableData[1][1] ===this.turn && this.tableData[2][0] ===this.turn){
                     win = true;
                 }
                 if (win){
@@ -44,7 +61,7 @@
                     // 두 번째 인자에 데이터를 넣을 수 있다.
                 } else{
                     let all = true; //  all이 true 면 무승부 라는 뜻
-                    rootData.tableData.forEach((row) => { // 모든 칸이 다 차 있는지 검사하기!
+                    this.tableData.forEach((row) => { // 모든 칸이 다 차 있는지 검사하기!
                         // 무승부 검사
                         row.forEach((cell)=>{
                             if (!cell){
