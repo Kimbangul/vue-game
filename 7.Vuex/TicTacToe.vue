@@ -15,27 +15,34 @@
 <script>
     import store from './store.js'; // store와 최상위 컴포넌트를 연결
     import TableComponent from './TableComponent.vue';
-    import EventBus from './EventBus.js';
 
     export default{
         store,
         components: {
             TableComponent,
         },
-        data(){
-            return {
-                tableData: [
-                    ['','',''], 
-                    ['','',''], 
-                    ['','','']
-                    // 2차원 배열: 배열 안에 배열이 또 들어가 있음!
-                ],
-                turn: 'O', // 클릭할 때마다 턴이 O에서 X로, X에서 O로 넘어감.
-                winner: '',
-            };
-        },
+        // data(){
+        //     return {
+        //         tableData: [
+        //             ['','',''], 
+        //             ['','',''], 
+        //             ['','','']
+        //             // 2차원 배열: 배열 안에 배열이 또 들어가 있음!
+        //         ],
+        //         turn: 'O', // 클릭할 때마다 턴이 O에서 X로, X에서 O로 넘어감.
+        //         winner: '',
+        //     };
+        // },
         computed: {
-            
+            tableData(){
+            return this.$store.state.tableData;  
+            },
+            turn(){
+                return this.$store.state.turn;
+            },
+            winner(){
+                return this.$store.state.winner;
+            }
         },
     }
 </script>

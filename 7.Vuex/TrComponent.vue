@@ -22,7 +22,7 @@
 
         },
         computed: {
-            rowData(){
+            rowData(){         
                 return this.$store.state.tableData[this.rowIndex];
             }            
         }
