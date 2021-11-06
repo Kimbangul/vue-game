@@ -5,6 +5,7 @@
 </table>
 </template>
 <script>
+import {mapState} from 'vuex';
 import TrComponent from './TrComponent.vue';
 
 export default{
@@ -20,9 +21,11 @@ export default{
 
     },
     computed:{
-        tableData(){
-            return this.$store.state.tableData;
-        }
+        
+        ...mapState(['tableData',]),
+        // tableData(){
+        //     return this.$store.state.tableData;
+        // }
     }
 }
 

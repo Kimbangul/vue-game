@@ -1,7 +1,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-Vue.use(Vuex); // vue랑 vuex를 연결 
+Vue.use(Vuex); // vue랑 vuex를 연결 // this.$store
+// Vue.ues(axios) // this.$axios
+// Vue.use를 쓸 때마다 Vue에 기본적인 기능이 한두개씩 생기는 것
 
 export const SET_WINNER = 'SET_WINNER'; // 함수명을 변수로 빼 줄 수 있다. (ES2015 문법). 동적 속성
 export const CLICK_CELL = 'CLICK_CELL';
@@ -23,7 +25,11 @@ export default new Vuex.Store({
         winner: '',
     },
     getters: {
-        // vue의 computed와 비슷
+        // vue의 computed와 비슷(캐싱이 됨). 기존의 state를 활용해서 뭔가 더 추가적인 작업을 할 때
+        turnMessage(state){
+            return state.turn + '님이 승리하셨습니다.';
+            // state.turn이 바뀔 때만 turnMessage가 따라서 바뀐다.
+        }
     },
     mutations: {
         // state를 동기적으로 수정할 때 사용
