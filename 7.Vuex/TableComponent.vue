@@ -1,7 +1,13 @@
 <template>
 <table>
-        <tr-component v-for="( rowData , index ) in tableData"  v-bind:key="index"  v-bind:row-index="index">
-    </tr-component>
+    <slot />
+    <!-- slot 자리에 상위 컴포넌트에서 정의했던 TableComponent의 자식 태그가 들어간다. -->
+    <!-- slot을 여러 개 넣을 수 있고, slot 안에 자식 태그를 넣어 기본값을 설정할 수 있다. -->
+    <!-- <slot>
+        <tr>
+            <td></td>
+        </tr>
+    </slot>    -->
 </table>
 </template>
 <script>
@@ -9,25 +15,8 @@ import {mapState} from 'vuex';
 import TrComponent from './TrComponent.vue';
 
 export default{
-        components:{
-        TrComponent,
-    },
-    data(){
-        return{
 
-        }
-    },
-    methods: {
-
-    },
-    computed:{
-        
-        ...mapState(['tableData',]),
-        // tableData(){
-        //     return this.$store.state.tableData;
-        // }
-    }
-}
+};
 
 </script>
 <style>

@@ -23,13 +23,18 @@ export default new Vuex.Store({
         ],
         turn: 'O', // 클릭할 때마다 턴이 O에서 X로, X에서 O로 넘어감.
         winner: '',
+        
     },
     getters: {
         // vue의 computed와 비슷(캐싱이 됨). 기존의 state를 활용해서 뭔가 더 추가적인 작업을 할 때
         turnMessage(state){
-            return state.turn + '님이 승리하셨습니다.';
+            return state.winner + '님이 승리하셨습니다.';
             // state.turn이 바뀔 때만 turnMessage가 따라서 바뀐다.
-        }
+        },
+        // cellData(state){
+        //     return state.tableData[this.rowIndex][this.cellIndex];
+        //   },
+        
     },
     mutations: {
         // state를 동기적으로 수정할 때 사용
