@@ -11,6 +11,47 @@ export const QUESTION_CELL = 'QUESTION_CELL';
 export const NORMALIZE_CELL = 'NORMALIZE_CELL';
 export const INCREMENT_TIMER = 'INCREMENT_TIMER'; 
 
+const CODE = {
+    NORMAL: -1, //닫힌 칸(지뢰 없음)
+    QUSETION: -2,
+    FLAG: -3,
+    QUSETION_MINE : -4,
+    FLAG_MINE: -5,
+    CLICKED_MINE: -6,
+    MINE: -7,
+    OPENED: 0 //0 이상이면 모두 열린 칸
+}
+
+const placeMine = (row, cell, mine) => {
+        const candidate = Array(row * cell).fill().map((arr, i) => {return i});
+        // 갯수만큼 배열 생성 [0,1,2,3 ...]
+        // fill() 메서드는 배열의 시작 인덱스부터 끝 인덱스의 이전까지 정적인 값 하나로 채웁니다.
+        // map 함수의 매개변수 : currentValue, index, array, thisArg
+        const shuffle = [];
+        while (candidate.length > row * cell - mine){ // 지뢰 갯수만큼 뽑기
+            const chosen = candidate.splice(Math.floor(Math.random() * candidate.length), 1)[0];
+            //splice 함수의 매개변수 : start, deleteCount, item(배열에 추가할 요소)
+            shuffle.push(chosen); // 지뢰를 심을 칸
+        }
+        const data = [];
+        for (let i = 0; i<row; i++){
+            const rowData = [];
+            data.push(rowData);
+            for (let j = 0; j < cell; j++){
+                rowData.push(CODE.NORMAL);
+                // 지뢰 없는 칸으로 전부 다 채운 2차원 배열 생성
+            }
+        }
+        for(let k = 0; k<shuffle.length; k++){
+            const ver = Math.floor(shuffle[k] / cell); // 세로 줄 세기. 줄은 정수 단위므로 floor() 사용
+            const hor = shuffle[k] % cell; 
+            data[ver][hor] = CODE.MINE;
+            // shuffle에 있는 랜덤한 숫자를 바탕으로 지뢰를 넣어준다.
+        }
+        return data;
+}
+    
+
 export default new Vuex.Store({
     state: {
         tableData: [],
@@ -27,7 +68,17 @@ export default new Vuex.Store({
     },
     mutations: {
         [START_GAME](state, {row, cell, mine}){
+            state.data ={
+                row,
+                cell,
+                mine,
+            }
+             // 객체 안의 개별적인 속성을 바꿀 때는 화면에 반영되지 않을 수 있음. 배열 안의 데이터를 인덱스를 통해  바꾸는 경우와 동일
+            // Vue.set(state.data, 'row', row);
+            state.tableData = placeMine(row, cell, mine); //지뢰 심는 함수
+            state.timer = 0;
 
+ 
         },
         [OPEN_CELL](state){
             

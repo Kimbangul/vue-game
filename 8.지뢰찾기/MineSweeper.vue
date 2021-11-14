@@ -1,6 +1,7 @@
 <template>
 <div>
-    <mine-form></mine-form>
+    <mine-form></mine-form> 
+    <!-- 사용자가 마인 설정할 form -->
     <div>{{timer}}</div>
     <table-component></table-component>
     <div>{{result}}</div>
@@ -10,11 +11,13 @@
 import {mapGetters, mapState} from 'vuex';
     import store, {CHANGE_TURN, CLICK_CELL, NO_WINNER, RESET_GAME, SET_WINNER} from './store.js'; // store와 최상위 컴포넌트를 연결
     import TableComponent from './TableComponent.vue';
+    import MineForm from './MineForm.vue'
 
     export default{
         store,
         components: {
             TableComponent,
+            MineForm,
         },       
         computed: {
          ...mapState(['timer','result']),
