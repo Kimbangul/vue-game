@@ -9,9 +9,8 @@ export const CLICK_MINE = 'CLICK_MINE';
 export const FLAG_CELL = 'FLAG_CELL';
 export const QUESTION_CELL = 'QUESTION_CELL';
 export const NORMALIZE_CELL = 'NORMALIZE_CELL';
-export const INCREMENT_TIMER = 'INCREMENT_TIMER'; 
-
-const CODE = {
+export const INCREMENT_TIMER = 'INCREMENT_TIMER';
+export const CODE = {
     NORMAL: -1, //닫힌 칸(지뢰 없음)
     QUSETION: -2,
     FLAG: -3,
@@ -20,7 +19,7 @@ const CODE = {
     CLICKED_MINE: -6,
     MINE: -7,
     OPENED: 0 //0 이상이면 모두 열린 칸
-}
+};
 
 const placeMine = (row, cell, mine) => {
         const candidate = Array(row * cell).fill().map((arr, i) => {return i});
