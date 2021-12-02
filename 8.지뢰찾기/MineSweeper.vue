@@ -9,7 +9,7 @@
 </template>
 <script>
 import {mapGetters, mapState} from 'vuex';
-    import store, {CHANGE_TURN, CLICK_CELL, NO_WINNER, RESET_GAME, SET_WINNER} from './store.js'; // store와 최상위 컴포넌트를 연결
+    import store, {CHANGE_TURN, CLICK_CELL, INCREMENT_TIMER, NO_WINNER, RESET_GAME, SET_WINNER} from './store.js'; // store와 최상위 컴포넌트를 연결
     import TableComponent from './TableComponent.vue';
     import MineForm from './MineForm.vue'
 
@@ -20,11 +20,25 @@ import {mapGetters, mapState} from 'vuex';
             MineForm,
         },       
         computed: {
-         ...mapState(['timer','result']),
+         ...mapState(['timer','result', 'halted']),
         },
         methods:{
          
         },    
+        watch:{
+            // 통제된 환경에서는 watch를 써도 무방
+            halted(value, oldvalue){
+                if (value === false){
+                    // false 일 때 게임 시작
+                    interval = setInterval(() => { // 메모리 누수를 막기 위해 변수로 저장
+                        this.$store.commit(INCREMENT_TIMER);
+                    }, 1000); //게임이 시작되면 1초마다 타이머 1씩 증가
+                }
+                else{ //게임 중단
+                    clearInterval(interval);
+                }
+            }
+        }
     }
 </script>
 <style>
