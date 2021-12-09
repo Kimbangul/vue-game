@@ -12,9 +12,9 @@ export const NORMALIZE_CELL = 'NORMALIZE_CELL';
 export const INCREMENT_TIMER = 'INCREMENT_TIMER';
 export const CODE = {
     NORMAL: -1, //닫힌 칸(지뢰 없음)
-    QUSETION: -2,
+    QUESTION: -2,
     FLAG: -3,
-    QUSETION_MINE : -4,
+    QUESTION_MINE : -4,
     FLAG_MINE: -5,
     CLICKED_MINE: -6,
     MINE: -7,
@@ -81,20 +81,34 @@ export default new Vuex.Store({
 
  
         },
-        [OPEN_CELL](state){
-            
+        [OPEN_CELL](state,{row,cell}){
+            Vue.set(state.tableData[row],cell,CODE.OPENED);
+            // vue에서 배열의 인덱스에 접근해 값을 바꾸려 하면 화면에 반영되지 않기 때문에 vue.set()을 사용해준다.
+            // 두 번째 인덱스는 두 번째 인수로 들어간다.
         },
         [CLICK_MINE](state){
 
         },
-        [FLAG_CELL](state){
-
+        [FLAG_CELL](state,{row,cell}){
+            if(state.tableData[row][cell] === CODE.MINE){
+                Vue.set(state.tableData[row],cell,CODE.FLAG_MINE);
+            }else{
+                Vue.set(state.tableData[row],cell,CODE.FLAG);
+            }
         },
-        [QUESTION_CELL](state){
-
+        [QUESTION_CELL](state,{row,cell}){
+            if(state.tableData[row][cell] === CODE.FLAG_MINE){
+                Vue.set(state.tableData[row],cell,CODE.QUESTION_MINE);
+            }else{
+                Vue.set(state.tableData[row],cell,CODE.QUESTION);
+            }
         },
-        [NORMALIZE_CELL](state){
-
+        [NORMALIZE_CELL](state,{row,cell}){
+            if(state.tableData[row][cell] === CODE.QUESTION_MINE){
+                Vue.set(state.tableData[row],cell,CODE.MINE);
+            }else{
+                Vue.set(state.tableData[row],cell,CODE.NORMAL);
+            }
         },
         [INCREMENT_TIMER](state){
             state.timer+=1;
