@@ -82,12 +82,36 @@ export default new Vuex.Store({
  
         },
         [OPEN_CELL](state,{row,cell}){
-            Vue.set(state.tableData[row],cell,CODE.OPENED);
+            function checkAround() {
+                // 주변 8칸 지뢰인지 검색
+                let around = [];
+                if (state.tableData[row - 1]){
+                    // row-1이 undefined 이면 에러가 발생하기 때문에 if문 사용
+                    around = around.concat([
+                        state.tableData[row - 1][cell - 1], state.tableData[row - 1][cell], state.tableData[row - 1][cell + 1]
+                    ]); // concat() 메서드는 인자로 주어진 배열이나 값들을 기존 배열에 합쳐서 새 배열을 반환합니다.
+                }               
+                around = around.concat([
+                    state.tableData[row][cell - 1], state.tableData[row][cell + 1]
+                ]);
+                if(state.tableData[row+1]){
+                    around = around.concat([
+                        state.tableData[row + 1][cell - 1], state.tableData[row + 1][cell], state.tableData[row + 1][cell + 1]
+                    ]);
+                }
+                const counted = around.filter(function(v){ //filter() 메서드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환합니다.
+                    return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v); // includes() 메서드는 배열이 특정 요소를 포함하고 있는지 판별합니다.
+                });
+                return counted.length;
+            }
+            const count = checkAround();
+            Vue.set(state.tableData[row],cell,count);
             // vue에서 배열의 인덱스에 접근해 값을 바꾸려 하면 화면에 반영되지 않기 때문에 vue.set()을 사용해준다.
             // 두 번째 인덱스는 두 번째 인수로 들어간다.
         },
-        [CLICK_MINE](state){
-
+        [CLICK_MINE](state,{row,cell}){
+            state.halted = true; //지뢰를 밟았으니 게임을 중단
+            Vue.set(state.tableData[row],cell,CODE.CLICKED_MINE);
         },
         [FLAG_CELL](state,{row,cell}){
             if(state.tableData[row][cell] === CODE.MINE){

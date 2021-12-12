@@ -12,7 +12,7 @@
 import {
     mapState
 } from 'vuex';
-import { CODE, FLAG_CELL, NORMALIZE_CELL, OPEN_CELL, QUESTION_CELL } from './store.js';
+import { CLICK_MINE, CODE, FLAG_CELL, NORMALIZE_CELL, OPEN_CELL, QUESTION_CELL } from './store.js';
 
 export default {
     computed: {
@@ -69,8 +69,8 @@ export default {
                         return '?';
                     case CODE.CLICKED_MINE:
                         return '펑';
-                    default:
-                        return '';
+                    default: // 주변 지뢰 갯수
+                        return this.$store.state.tableData[row][cell] || ''; //주변 지뢰 갯수가 0인 경우 빈칸으로 만들어주기
                 }
             }
         }
@@ -80,7 +80,14 @@ export default {
             if (this.halted){
                 return; //게임이 중단되었을 때는 칸을 클릭하지 못하게
             }
-            this.$store.commit(OPEN_CELL,{row, cell}); // 두번째 인수로 데이터 전달
+            switch(this.tableData[row][cell]){
+                 case CODE.NORMAL:
+                   return this.$store.commit(OPEN_CELL,{row, cell}); // 두번째 인수로 데이터 전달
+                case CODE.MINE:
+                   return  this.$store.commit(CLICK_MINE,{row,cell});
+               default:
+                   return;
+            }
         },
         onRightClickTd(row, cell){
             console.log(row, cell, this.halted);
