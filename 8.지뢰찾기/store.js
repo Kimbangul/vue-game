@@ -82,7 +82,22 @@ export default new Vuex.Store({
  
         },
         [OPEN_CELL](state,{row,cell}){
-            function checkAround() {
+            const checked = [];            
+            function checkAround(row, cell) {
+                if (row < 0 || row>= state.tableData.length || cell < 0 || cell >= state.tableData[0].length){
+                    // undefined 에러날까봐 보호!
+                    return;
+                }
+                if ([CODE.OPENED, CODE.FLAG, CODE.FLAG_MINE, CODE.QUESTION_MINE, CODE.QUESTION].includes(state.tableData[row][cell])){
+                    // 주변 칸이 열리거나 지뢰일 경우엔 열 필요 없음, 빈 칸인 경우만 검사함
+                    return;
+                }                
+                if(checked.includes(row + '/' + cell)){
+                    // 이미 연 경우는 열지 않기
+                    return;
+                }else{
+                    checked.push(row + '/' + cell); // 연 칸이면 checked 칸에 push 하기
+                }
                 // 주변 8칸 지뢰인지 검색
                 let around = [];
                 if (state.tableData[row - 1]){
@@ -102,12 +117,29 @@ export default new Vuex.Store({
                 const counted = around.filter(function(v){ //filter() 메서드는 주어진 함수의 테스트를 통과하는 모든 요소를 모아 새로운 배열로 반환합니다.
                     return [CODE.MINE, CODE.FLAG_MINE, CODE.QUESTION_MINE].includes(v); // includes() 메서드는 배열이 특정 요소를 포함하고 있는지 판별합니다.
                 });
-                return counted.length;
+                if (counted.length === 0 && row > -1){ //주변 칸에 지뢰가 하나도 없으면
+                    const near = [];
+                    if (row -1 > -1){
+                        near.push([row-1, cell-1]);
+                        near.push([row-1, cell]);
+                        near.push([row-1, cell+1]);
+                    }
+                    near.push([row, cell-1]);
+                    near.push([row, cell+1]);
+                    if (row + 1 < state.tableData.length){
+                        near.push([row + 1, cell-1]);
+                        near.push([row + 1, cell]);
+                        near.push([row + 1, cell+1]);
+                    }
+                    near.forEach((n)=> { // 주어진 함수를 배열 요소 각각에 대해 실행합니다.
+                        if (state.tableData[n[0]][n[1]] !== CODE.OPENED){ // 연 칸이 아니면 checkAround 실행
+                            checkAround(n[0],n[1]);
+                        }
+                    });
+                } 
+                Vue.set(state.tableData[row], cell, counted.length);
             }
-            const count = checkAround();
-            Vue.set(state.tableData[row],cell,count);
-            // vue에서 배열의 인덱스에 접근해 값을 바꾸려 하면 화면에 반영되지 않기 때문에 vue.set()을 사용해준다.
-            // 두 번째 인덱스는 두 번째 인수로 들어간다.
+            checkAround(row, cell);
         },
         [CLICK_MINE](state,{row,cell}){
             state.halted = true; //지뢰를 밟았으니 게임을 중단
