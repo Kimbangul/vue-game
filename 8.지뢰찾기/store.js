@@ -61,7 +61,8 @@ export default new Vuex.Store({
         },
         timer: 0,
         halted: true, //게임이 중단된
-        result: ''
+        result: '',
+        openedCount: 0, // 연 칸의 갯수
     },
     getters: {
 
@@ -78,12 +79,19 @@ export default new Vuex.Store({
             state.tableData = placeMine(row, cell, mine); //지뢰 심는 함수
             state.timer = 0;
             state.halted = false;
-
+            state.openedCount = 0;
+            state.result = '';
  
         },
         [OPEN_CELL](state,{row,cell}){
+            let openedCount = 0;
+            let halted = false;
+            let result = '';
+            // 칸을 열 때마다 기록
+
             const checked = [];            
             function checkAround(row, cell) {
+                
                 if (row < 0 || row>= state.tableData.length || cell < 0 || cell >= state.tableData[0].length){
                     // undefined 에러날까봐 보호!
                     return;
@@ -137,9 +145,20 @@ export default new Vuex.Store({
                         }
                     });
                 } 
+                if(state.tableData[row][cell] === CODE.NORMAL){
+                    // 현재칸이 빈 칸이면
+                    openedCount += 1;
+                }
                 Vue.set(state.tableData[row], cell, counted.length);
             }
             checkAround(row, cell);
+            if (state.data.row * state.data.cell - state.data.mine === state.openedCount + openedCount){ // 방금 연 칸의 갯수까지 더해서
+                halted = true; // 승리 시 게임 중단
+                result = `${state.timer}초만에 승리하셨습니다.`;
+            }
+            state.openedCount += openedCount;
+            state.halted = halted; // 최종적으로 데이터를 vuex 스토어에 저장
+            state.result = result;
         },
         [CLICK_MINE](state,{row,cell}){
             state.halted = true; //지뢰를 밟았으니 게임을 중단
