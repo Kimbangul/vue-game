@@ -8,6 +8,7 @@ import LottoGenerator from '../6.로또추첨기/LottoGenerator.vue';
 Vue.use(VueRouter);
 
 export default new VueRouter({
+    mode: 'history',
     // 루트 컴포넌트에도 연결해주어야 함
     routes: [
         {path: '/number-baseball', component: NumberBaseball, }, // 원하는 주소, 화면에 표시할 컴포넌트
